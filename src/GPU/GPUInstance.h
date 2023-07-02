@@ -10,13 +10,15 @@
 // TODO chose api backend
 
 enum class GPU_Backend{
-    Empty = 0,
-    Vulkan = 1,
-    Metal = 2,
-    Dx12 = 3,
-    Dc11 = 4,
-    Gl = 5,
-    BrowserWebGpu = 6
+    WGPUBackendType_Null = 0x00000000,
+    WGPUBackendType_WebGPU = 0x00000001,
+    WGPUBackendType_D3D11 = 0x00000002,
+    WGPUBackendType_D3D12 = 0x00000003,
+    WGPUBackendType_Metal = 0x00000004,
+    WGPUBackendType_Vulkan = 0x00000005,
+    WGPUBackendType_OpenGL = 0x00000006,
+    WGPUBackendType_OpenGLES = 0x00000007,
+    WGPUBackendType_Force32 = 0x7FFFFFFF
 };
 
 class GPUInstance {
