@@ -5,8 +5,6 @@
 #ifndef TESTWEBGPU_WINDOW_H
 #define TESTWEBGPU_WINDOW_H
 #include "GLFW/glfw3.h"
-#include "wgpu.h"
-
 
 class window {
 public:
@@ -39,13 +37,12 @@ private:
     static void GLFW_CharCallback(GLFWwindow* window, unsigned int codepoint);
     static void GLFW_JoystickCallback(int joy, int event);
 
-    bool _WebGPUInit();
     bool _CreateWindow(const char* title, uint32_t width, uint32_t height);
 
 private:
+    friend class GPUSurface;
     GLFWwindow* m_Window;
     bool m_FullScreen, m_VSync;
-    WGPUInstance m_GPU_instance;
 };
 
 

@@ -7,23 +7,7 @@
 
 window::window(const char* title, size_t width, size_t height, bool fullscreen, bool vsync):
     m_FullScreen(fullscreen), m_VSync(vsync){
-    if (!_WebGPUInit()) return;
     if (!_CreateWindow(title, width, height)) return;
-}
-
-bool window::_WebGPUInit() {
-    // create a descriptor
-    WGPUInstanceDescriptor desc = {};
-    desc.nextInChain = nullptr;
-
-    // create instance using descriptor
-    m_GPU_instance = wgpuCreateInstance(&desc);
-    if (!m_GPU_instance) {
-        std::cerr << "[Error] Could not initialize WebGPU! \n";
-        return false;
-    }
-    std::cout << "[info] wgpu instance: " << m_GPU_instance << "\n";
-    return true;
 }
 
 bool window::_CreateWindow(const char *title, uint32_t width, uint32_t height) {
@@ -31,6 +15,7 @@ bool window::_CreateWindow(const char *title, uint32_t width, uint32_t height) {
         std::cerr << "[Error] Could not initialize GLFW!\n";
         return false;
     }
+    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
     m_Window = glfwCreateWindow(width, height, title, NULL, NULL);
 
     if (!m_Window) {
@@ -43,8 +28,6 @@ bool window::_CreateWindow(const char *title, uint32_t width, uint32_t height) {
 window::~window() {
     if (m_Window)
         glfwDestroyWindow(m_Window);
-    if (m_GPU_instance)
-        wgpuInstanceDrop(m_GPU_instance);
     glfwTerminate();
 }
 

@@ -8,14 +8,14 @@ project(
 add_subdirectory(lib/glfw)
 add_subdirectory(lib/webgpu)
 
-add_executable(testWebGPU src/main.cpp "src/webgpu-utils.h" src/webgpu-utils.cpp src/webgpu-release.h src/glfw3webgpu.h src/glfw3webgpu.c)
+add_executable(testWebGPU src/main.cpp src/GPU/GPUAdapter.cpp src/window.cpp src/GPU/GPUSurface.cpp src/GPU/GPUSurface.h src/GPU/GPUInstance.cpp src/GPU/GPUInstance.h)
 include_directories(src lib/webgpu/Include)
 
 target_link_libraries(testWebGPU PRIVATE glfw webgpu)
 
 set_target_properties(testWebGPU PROPERTIES
-    CXX_STANDARD 17
-    COMPILE_WARNING_AS_ERROR ON
+    CXX_STANDARD 20
+    #COMPILE_WARNING_AS_ERROR ON
 )
 
 if (MSVC)
