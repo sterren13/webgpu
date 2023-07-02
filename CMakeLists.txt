@@ -5,6 +5,12 @@ project(
         LANGUAGES CXX C
 )
 
+set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL  "GLFW lib only")
+set(GLFW_BUILD_TESTS OFF CACHE BOOL  "GLFW lib only")
+set(GLFW_BUILD_DOCS OFF CACHE BOOL  "GLFW lib only")
+set(GLFW_BUILD_INSTALL OFF CACHE BOOL  "GLFW lib only")
+set(GLFW_BUILD_WAYLAND ON)
+set(GLFW_BUILD_X11 OFF)
 add_subdirectory(lib/glfw)
 add_subdirectory(lib/webgpu)
 
