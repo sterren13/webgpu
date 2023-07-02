@@ -28,4 +28,6 @@ else()
     target_compile_options(testWebGPU PRIVATE -Wall -Wextra -pedantic)
 endif()
 
-target_copy_webgpu_binaries(testWebGPU)
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    target_copy_webgpu_binaries(testWebGPU)
+endif()
