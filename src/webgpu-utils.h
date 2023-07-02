@@ -4,7 +4,7 @@
 
 #ifndef TESTWEBGPU_WEBGPU_UTILS_H
 #define TESTWEBGPU_WEBGPU_UTILS_H
-#include "webgpu.h"
+#include <webgpu/webgpu.h>
 
 /**
  * Utility function to get a WebGPU adapter, so that

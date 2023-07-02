@@ -4,7 +4,7 @@
 
 #ifndef TESTWEBGPU_WEBGPU_RELEASE_H
 #define TESTWEBGPU_WEBGPU_RELEASE_H
-#include "webgpu.h"
+#include "webgpu/webgpu.h"
 
 // Dawn and wgpu-native do not agree yet on the lifetime management
 // of objects. We align on Dawn convention of calling "release" the
@@ -12,7 +12,7 @@
 // (The key difference is that Dawn also offers a "reference" function to
 // increment a reference counter, and release decreases this counter and
 // actually frees memory only when the counter gets to 0)
-#include "wgpu.h"
+#include "webgpu/wgpu.h"
 #define wgpuInstanceRelease wgpuInstanceDrop
 #define wgpuAdapterRelease wgpuAdapterDrop
 #define wgpuBindGroupRelease wgpuBindGroupDrop

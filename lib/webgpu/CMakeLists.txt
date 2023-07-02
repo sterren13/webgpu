@@ -1,3 +1,6 @@
+cmake_minimum_required(VERSION 3.25)
+project(webgpu)
+
 set(WGPU ${CMAKE_CURRENT_SOURCE_DIR})
 if (NOT ARCH)
 	set(ARCH x86_64)
@@ -9,33 +12,35 @@ add_library(webgpu SHARED IMPORTED GLOBAL)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
 
-	set(WGPU_RUNTIME_LIB ${WGPU}/windows-${ARCH}/wgpu_native.dll PARENT_SCOPE)
+	set(WGPU_RUNTIME_LIB ${WGPU}/bin/windows/${ARCH}/wgpu_native.dll PARENT_SCOPE)
 	set_target_properties(
 		webgpu
 		PROPERTIES
 			IMPORTED_LOCATION "${WGPU_RUNTIME_LIB}"
-			IMPORTED_IMPLIB "${WGPU}/windows-${ARCH}/wgpu_native.lib"
-			INTERFACE_INCLUDE_DIRECTORIES "${WGPU}"
+			IMPORTED_IMPLIB "${WGPU}/bin/windows/${ARCH}/wgpu_native.lib"
+			INTERFACE_INCLUDE_DIRECTORIES "${WGPU}/Include"
 	)
 
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 
-	set(WGPU_RUNTIME_LIB ${WGPU}/linux-${ARCH}/libwgpu.so PARENT_SCOPE)
+	set(WGPU_RUNTIME_LIB ${WGPU}/bin/linux/${ARCH}/libwgpu.so)
 	set_target_properties(
 		webgpu
 		PROPERTIES
 			IMPORTED_LOCATION "${WGPU_RUNTIME_LIB}"
 			INTERFACE_INCLUDE_DIRECTORIES "${WGPU}"
+			INTERFACE_INCLUDE_DIRECTORIES "${WGPU}/Include"
 	)
 
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 
-	set(WGPU_RUNTIME_LIB ${WGPU}/macos-${ARCH}/libwgpu.dylib PARENT_SCOPE)
+	set(WGPU_RUNTIME_LIB ${WGPU}/bin/macos/${ARCH}/libwgpu.dylib PARENT_SCOPE)
 	set_target_properties(
 		webgpu
 		PROPERTIES
 			IMPORTED_LOCATION "${WGPU_RUNTIME_LIB}"
 			INTERFACE_INCLUDE_DIRECTORIES "${WGPU}"
+			INTERFACE_INCLUDE_DIRECTORIES "${WGPU}/Include"
 	)
 
 else()

@@ -9,7 +9,7 @@ add_subdirectory(lib/glfw)
 add_subdirectory(lib/webgpu)
 
 add_executable(testWebGPU src/main.cpp "src/webgpu-utils.h" src/webgpu-utils.cpp src/webgpu-release.h src/glfw3webgpu.h src/glfw3webgpu.c)
-include_directories(src lib/webgpu/inc)
+include_directories(src lib/webgpu/Include)
 
 target_link_libraries(testWebGPU PRIVATE glfw webgpu)
 

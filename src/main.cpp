@@ -6,8 +6,8 @@
 
 #include <GLFW/glfw3.h>
 
-#include <webgpu.h>
-#include <wgpu.h> // wgpuTextureViewDrop
+#include <webgpu/webgpu.h>
+#include <webgpu/wgpu.h> // wgpuTextureViewDrop
 
 #include <iostream>
 #include <cassert>
