@@ -1354,7 +1354,7 @@ typedef void (*WGPUProcShaderModuleSetLabel)(WGPUShaderModule shaderModule, char
 // Procs of Surface
 typedef WGPUTextureFormat (*WGPUProcSurfaceGetPreferredFormat)(WGPUSurface surface, WGPUAdapter adapter);
 
-// Procs of SwapChain
+// Procs of GPUSwapChain
 typedef WGPUTextureView (*WGPUProcSwapChainGetCurrentTextureView)(WGPUSwapChain swapChain);
 typedef void (*WGPUProcSwapChainPresent)(WGPUSwapChain swapChain);
 
@@ -1529,7 +1529,7 @@ WGPU_EXPORT void wgpuShaderModuleSetLabel(WGPUShaderModule shaderModule, char co
 // Methods of Surface
 WGPU_EXPORT WGPUTextureFormat wgpuSurfaceGetPreferredFormat(WGPUSurface surface, WGPUAdapter adapter);
 
-// Methods of SwapChain
+// Methods of GPUSwapChain
 WGPU_EXPORT WGPUTextureView wgpuSwapChainGetCurrentTextureView(WGPUSwapChain swapChain);
 WGPU_EXPORT void wgpuSwapChainPresent(WGPUSwapChain swapChain);
 

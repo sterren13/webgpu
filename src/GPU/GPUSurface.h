@@ -14,6 +14,7 @@ public:
     ~GPUSurface();
 private:
     friend class GPUAdapter;
+    friend class GPUSwapChain;
     WGPUSurface surface;
 };
 

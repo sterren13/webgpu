@@ -8,7 +8,7 @@ project(
 add_subdirectory(lib/glfw)
 add_subdirectory(lib/webgpu)
 
-add_executable(testWebGPU src/main.cpp src/GPU/GPUAdapter.cpp src/window.cpp src/GPU/GPUSurface.cpp src/GPU/GPUSurface.h src/GPU/GPUInstance.cpp src/GPU/GPUInstance.h)
+add_executable(testWebGPU src/main.cpp src/GPU/GPUAdapter.cpp src/window.cpp src/GPU/GPUSurface.cpp src/GPU/GPUSurface.h src/GPU/GPUInstance.cpp src/GPU/GPUInstance.h src/GPU/GPUDevice.cpp src/GPU/GPUDevice.h src/GPU/GPUCommandBuffer.cpp src/GPU/GPUCommandBuffer.h src/GPU/GPURenderPass.cpp src/GPU/GPURenderPass.h src/GPU/GPUSwapChain.cpp src/GPU/GPUSwapChain.h src/GPU/GPUTypse.h)
 include_directories(src lib/webgpu/Include)
 
 target_link_libraries(testWebGPU PRIVATE glfw webgpu)

@@ -14,6 +14,8 @@ public:
     ~GPUAdapter();
     void inspect();
 private:
+    friend class GPUDevice;
+    friend class GPUSwapChain;
     WGPUAdapter adapter;
 };
 

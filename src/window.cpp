@@ -16,6 +16,7 @@ bool window::_CreateWindow(const char *title, uint32_t width, uint32_t height) {
         return false;
     }
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
     m_Window = glfwCreateWindow(width, height, title, NULL, NULL);
 
     if (!m_Window) {
