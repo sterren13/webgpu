@@ -19,7 +19,7 @@ GPUSwapChain::GPUSwapChain(GPUDevice& device ,GPUAdapter& adapter, GPUSurface& s
 }
 
 GPUSwapChain::~GPUSwapChain() {
-    wgpuSwapChainDrop(swapChain);
+    wgpuSwapChainRelease(swapChain);
 }
 
 WGPUTextureView GPUSwapChain::GetCurrentView() {
@@ -31,5 +31,5 @@ void GPUSwapChain::Present() {
 }
 
 void GPUSwapChain::ReleaseView(WGPUTextureView view) {
-    wgpuTextureViewDrop(view);
+    wgpuTextureViewRelease(view);
 }

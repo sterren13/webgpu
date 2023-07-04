@@ -23,11 +23,11 @@ int main(int, char**){
 
     while (!w.Update()){
         auto view = g_swapChain.GetCurrentView();
-        GPUCommandBuffer command(g_device);
-        GPURenderPass renderPass = command.BeginRenderPass({1.0f, 0.0f, 0.0f, 1.0f}, view);
-        renderPass.EndRenderPass();
+        //GPUCommandBuffer command(g_device);
+        //GPURenderPass renderPass = command.BeginRenderPass({1.0f, 0.0f, 0.0f, 1.0f}, view);
+        //renderPass.EndRenderPass();
         g_swapChain.ReleaseView(view);
-        command.SubmitBuffer();
+        //command.SubmitBuffer();
         g_swapChain.Present();
     }
 

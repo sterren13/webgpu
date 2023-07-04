@@ -22,5 +22,5 @@ GPUInstance::GPUInstance() {
 
 GPUInstance::~GPUInstance() {
     if (m_instance)
-        wgpuInstanceDrop(m_instance);
+        wgpuInstanceRelease(m_instance);
 }

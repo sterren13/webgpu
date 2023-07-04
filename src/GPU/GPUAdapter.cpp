@@ -33,7 +33,7 @@ GPUAdapter::GPUAdapter(GPUInstance& instance, GPUSurface& surface) {
 }
 
 GPUAdapter::~GPUAdapter() {
-    wgpuAdapterDrop(adapter);
+    wgpuAdapterRelease(adapter);
 }
 
 void GPUAdapter::inspect() {

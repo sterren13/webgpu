@@ -14,7 +14,18 @@ set(GLFW_BUILD_X11 OFF)
 add_subdirectory(lib/glfw)
 add_subdirectory(lib/webgpu)
 
-add_executable(testWebGPU src/main.cpp src/GPU/GPUAdapter.cpp src/window.cpp src/GPU/GPUSurface.cpp src/GPU/GPUSurface.h src/GPU/GPUInstance.cpp src/GPU/GPUInstance.h src/GPU/GPUDevice.cpp src/GPU/GPUDevice.h src/GPU/GPUCommandBuffer.cpp src/GPU/GPUCommandBuffer.h src/GPU/GPURenderPass.cpp src/GPU/GPURenderPass.h src/GPU/GPUSwapChain.cpp src/GPU/GPUSwapChain.h src/GPU/GPUTypse.h)
+add_executable(testWebGPU
+        src/main.cpp
+        src/GPU/GPUAdapter.cpp
+        src/window.cpp
+        src/GPU/GPUSurface.cpp
+        src/GPU/GPUInstance.cpp
+        src/GPU/GPUDevice.cpp
+        src/GPU/GPUCommandBuffer.cpp
+        src/GPU/GPURenderPass.cpp
+        src/GPU/GPUSwapChain.cpp
+        )
+
 include_directories(src lib/webgpu/Include)
 
 target_link_libraries(testWebGPU PRIVATE glfw webgpu)
@@ -34,6 +45,4 @@ else()
     target_compile_options(testWebGPU PRIVATE -Wall -Wextra -pedantic)
 endif()
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    target_copy_webgpu_binaries(testWebGPU)
-endif()
+target_copy_webgpu_binaries(testWebGPU)

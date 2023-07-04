@@ -41,7 +41,7 @@ GPUDevice::GPUDevice(GPUAdapter& adapter) {
 }
 
 GPUDevice::~GPUDevice() {
-    wgpuDeviceDrop(device);
+    wgpuDeviceRelease(device);
 }
 
 void GPUDevice::onDeviceError(WGPUErrorType type, const char *massage, void *pUserData) {
