@@ -6,37 +6,40 @@
 #include <webgpu/wgpu.h>
 #include <iostream>
 #include <vector>
+#include <cassert>
 
 GPUDevice::GPUDevice(GPUAdapter& adapter) {
-    WGPUDeviceDescriptor descriptor = {
+    descriptor = {
             .nextInChain = nullptr,
             .label = "My Device",
             .requiredFeaturesCount = 0,
             .requiredLimits = nullptr,
     };
-    descriptor.defaultQueue.nextInChain = nullptr;
-    descriptor.defaultQueue.label = "The default queue";
-
     struct UserData {
-        WGPUDevice d = nullptr;
+        WGPUDevice device = nullptr;
         bool requestEnded = false;
     };
     UserData userData;
 
-    auto onDeviceRequestEnded = [](WGPURequestDeviceStatus status, WGPUDevice d, char const* message, void* pUserData){
+    auto onDeviceRequestEnded = [](WGPURequestDeviceStatus status, WGPUDevice device, char const * message, void * pUserData) {
         UserData& userData = *reinterpret_cast<UserData*>(pUserData);
-        if (status == WGPURequestDeviceStatus_Success){
-            userData.d = d;
+        if (status == WGPURequestDeviceStatus_Success) {
+            userData.device = device;
         } else {
-            std::cerr << "Could not get WebGPU device: " << message << "\n";
+            std::cout << "Could not get WebGPU adapter: " << message << std::endl;
         }
         userData.requestEnded = true;
     };
 
-    wgpuAdapterRequestDevice(adapter.adapter, &descriptor, onDeviceRequestEnded, (void*)&userData);
+    wgpuAdapterRequestDevice(
+            adapter.adapter,
+            &descriptor,
+            onDeviceRequestEnded,
+            (void*)&userData
+    );
 
-    device = userData.d;
-
+    assert(userData.requestEnded);
+    device = userData.device;
     wgpuDeviceSetUncapturedErrorCallback(device, onDeviceError, nullptr);
 }
 

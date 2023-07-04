@@ -24,7 +24,8 @@ add_executable(testWebGPU
         src/GPU/GPUCommandBuffer.cpp
         src/GPU/GPURenderPass.cpp
         src/GPU/GPUSwapChain.cpp
-        )
+        src/GPU/glfw3webgpu.h
+        src/GPU/glfw3webgpu.c)
 
 include_directories(src lib/webgpu/Include)
 

@@ -12,7 +12,8 @@ class GPUSurface {
 public:
     GPUSurface(GPUInstance& instance, window& w);
     ~GPUSurface();
-private:
+
+public:
     friend class GPUAdapter;
     friend class GPUSwapChain;
     WGPUSurface surface;

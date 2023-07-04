@@ -6,30 +6,40 @@
 #include "webgpu/wgpu.h"
 #include <iostream>
 #include <vector>
+#include <cassert>
 
 GPUAdapter::GPUAdapter(GPUInstance& instance, GPUSurface& surface) {
-    WGPURequestAdapterOptions options {
+    options = {
         .nextInChain = nullptr,
         .compatibleSurface = surface.surface
     };
 
     struct UserData {
-        WGPUAdapter a = nullptr;
+        WGPUAdapter adapter = nullptr;
         bool requestEnded = false;
     };
     UserData userData;
 
-    auto onAdapterRequestEnded = [](WGPURequestAdapterStatus status, WGPUAdapter ad, char const* message, void* pUserData) {
+    auto onAdapterRequestEnded = [](WGPURequestAdapterStatus status, WGPUAdapter adapter, char const * message, void * pUserData) {
         UserData& userData = *reinterpret_cast<UserData*>(pUserData);
-        if (status == WGPURequestAdapterStatus_Success)
-            userData.a = ad;
-        else
-            std::cerr << "Could not get WebGPU adapter: " << message << "\n";
+        if (status == WGPURequestAdapterStatus_Success) {
+            userData.adapter = adapter;
+        } else {
+            std::cout << "Could not get WebGPU adapter: " << message << std::endl;
+        }
         userData.requestEnded = true;
     };
 
-    wgpuInstanceRequestAdapter(instance.m_instance, &options, onAdapterRequestEnded, (void*)&userData);
-    adapter = userData.a;
+    wgpuInstanceRequestAdapter(
+            instance.m_instance /* equivalent of navigator.gpu */,
+            &options,
+            onAdapterRequestEnded,
+            (void*)&userData
+    );
+
+    adapter = userData.adapter;
+
+    assert(userData.requestEnded);
 }
 
 GPUAdapter::~GPUAdapter() {

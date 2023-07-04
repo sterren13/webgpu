@@ -14,10 +14,12 @@ public:
     void inspect();
 
     static void onDeviceError(WGPUErrorType type, char const* massage, void* pUserData);
-private:
+
+public:
     friend class GPUCommandBuffer;
     friend class GPUSwapChain;
     WGPUDevice device;
+    WGPUDeviceDescriptor descriptor;
 };
 
 

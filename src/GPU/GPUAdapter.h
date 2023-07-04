@@ -13,10 +13,12 @@ public:
     GPUAdapter(GPUInstance& instance, GPUSurface& surface);
     ~GPUAdapter();
     void inspect();
-private:
+
+public:
     friend class GPUDevice;
     friend class GPUSwapChain;
     WGPUAdapter adapter;
+    WGPURequestAdapterOptions options;
 };
 
 

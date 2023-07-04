@@ -20,6 +20,7 @@ public:
 
 private:
     WGPUSwapChain swapChain = nullptr;
+    WGPUSwapChainDescriptor swapChainDescriptor;
 };
 
 

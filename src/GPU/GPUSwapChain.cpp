@@ -6,7 +6,6 @@
 #include "webgpu/wgpu.h"
 
 GPUSwapChain::GPUSwapChain(GPUDevice& device ,GPUAdapter& adapter, GPUSurface& surface) {
-    WGPUSwapChainDescriptor swapChainDescriptor = {};
     swapChainDescriptor.width = 640;
     swapChainDescriptor.height = 480;
     swapChainDescriptor.usage = WGPUTextureUsage_RenderAttachment;
