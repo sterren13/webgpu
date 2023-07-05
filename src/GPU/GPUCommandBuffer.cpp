@@ -44,7 +44,6 @@ GPURenderPass GPUCommandBuffer::BeginRenderPass(Color_t color, WGPUTextureView T
 }
 
 void GPUCommandBuffer::CreateBuffer() {
-    std::cout << "Create command" << std::endl;
     WGPUCommandBufferDescriptor CommandBufferDescriptor ={};
     CommandBufferDescriptor.nextInChain = nullptr;
     CommandBufferDescriptor.label = "Command buffer";
@@ -52,6 +51,5 @@ void GPUCommandBuffer::CreateBuffer() {
 }
 
 void GPUCommandBuffer::SubmitBuffer() {
-    std::cout << "Submitting command" << std::endl;
     wgpuQueueSubmit(queue, 1, &command);
 }

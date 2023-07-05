@@ -1,34 +1,30 @@
 //
-// Created by sterr on 3/07/2023.
+// Created by sterr on 5/07/2023.
 //
 
 #include "GPUSwapChain.h"
-#include "webgpu/wgpu.h"
 
-GPUSwapChain::GPUSwapChain(GPUDevice& device ,GPUAdapter& adapter, GPUSurface& surface) {
-    swapChainDescriptor.width = 640;
-    swapChainDescriptor.height = 480;
-    swapChainDescriptor.usage = WGPUTextureUsage_RenderAttachment;
-
+GPUSwapChain::GPUSwapChain(GPUSurface& surface, GPUAdapter& adapter, GPUDevice& device) {
+    swapChainDesc = {
+            .width = 640,
+            .height = 480,
+            .presentMode = WGPUPresentMode_Fifo
+    };
     WGPUTextureFormat swapChainFormat = wgpuSurfaceGetPreferredFormat(surface.surface, adapter.adapter);
-    swapChainDescriptor.format = swapChainFormat;
-    swapChainDescriptor.presentMode = WGPUPresentMode_Fifo;
+    swapChainDesc.usage = WGPUTextureUsage_RenderAttachment;
+    swapChainDesc.format = swapChainFormat;
 
-    swapChain = wgpuDeviceCreateSwapChain(device.device, surface.surface, &swapChainDescriptor);
+    swapChain = wgpuDeviceCreateSwapChain(device.device, surface.surface, &swapChainDesc);
 }
 
 GPUSwapChain::~GPUSwapChain() {
     wgpuSwapChainRelease(swapChain);
 }
 
-WGPUTextureView GPUSwapChain::GetCurrentView() {
+WGPUTextureView GPUSwapChain::CurrentTextureView() {
     return wgpuSwapChainGetCurrentTextureView(swapChain);
 }
 
 void GPUSwapChain::Present() {
     wgpuSwapChainPresent(swapChain);
-}
-
-void GPUSwapChain::ReleaseView(WGPUTextureView view) {
-    wgpuTextureViewRelease(view);
 }
