@@ -15,6 +15,7 @@ public:
     ~GPUSwapChain();
     WGPUTextureView CurrentTextureView();
     void Present();
+    WGPUTextureFormat swapChainFormat;
 private:
     WGPUSwapChainDescriptor swapChainDesc = {};
     WGPUSwapChain swapChain = nullptr;

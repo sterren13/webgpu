@@ -18,6 +18,9 @@ public:
 public:
     friend class GPUCommandBuffer;
     friend class GPUSwapChain;
+    friend class GPUShader;
+    friend class GPURenderPipeline;
+
     WGPUDevice device;
     WGPUDeviceDescriptor descriptor;
 };

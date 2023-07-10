@@ -10,7 +10,7 @@ GPUSwapChain::GPUSwapChain(GPUSurface& surface, GPUAdapter& adapter, GPUDevice& 
             .height = 480,
             .presentMode = WGPUPresentMode_Fifo
     };
-    WGPUTextureFormat swapChainFormat = wgpuSurfaceGetPreferredFormat(surface.surface, adapter.adapter);
+    swapChainFormat = wgpuSurfaceGetPreferredFormat(surface.surface, adapter.adapter);
     swapChainDesc.usage = WGPUTextureUsage_RenderAttachment;
     swapChainDesc.format = swapChainFormat;
 
