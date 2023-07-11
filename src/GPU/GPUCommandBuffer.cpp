@@ -53,3 +53,12 @@ void GPUCommandBuffer::CreateBuffer() {
 void GPUCommandBuffer::SubmitBuffer() {
     wgpuQueueSubmit(queue, 1, &command);
 }
+
+void GPUCommandBuffer::CopyBufferToBuffer(GPUBuffer &Source, uint64_t SourceOffset, GPUBuffer &Destination,
+                                          uint64_t DestinationOffset, uint64_t size) {
+    wgpuCommandEncoderCopyBufferToBuffer(encoder, Source.buffer, SourceOffset, Destination.buffer, DestinationOffset, size);
+}
+
+void GPUCommandBuffer::ClearBuffer(GPUBuffer &Source, uint64_t Offset, uint64_t Size) {
+    wgpuCommandEncoderClearBuffer(encoder, Source.buffer, Offset, Size);
+}

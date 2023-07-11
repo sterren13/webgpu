@@ -8,6 +8,7 @@
 #include "GPUDevice.h"
 #include "GPURenderPass.h"
 #include "GPUTypse.h"
+#include "GPUBuffer.h"
 
 class GPUCommandBuffer {
 public:
@@ -16,10 +17,11 @@ public:
     void SubmitDebugMarker(const char* text);
     GPURenderPass BeginRenderPass(Color_t color, WGPUTextureView);
     // TODO void BeginComputePass();
-    // TODO void CopyBufferToBuffer();
+    void CopyBufferToBuffer(GPUBuffer& Source, uint64_t SourceOffset, GPUBuffer& Destination,
+                            uint64_t DestinationOffset, uint64_t size);
     // TODO void CopyBufferToTexture();
     // TODO void CopyTextureToTexture();
-    // TODO void ClearBuffer();
+    void ClearBuffer(GPUBuffer& Source, uint64_t Offset = 0, uint64_t Size = 0);
 
     void CreateBuffer();
     void SubmitBuffer();

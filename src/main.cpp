@@ -7,6 +7,7 @@
 #include "GPU/GPUSwapChain.h"
 #include "GPU/GPUShader.h"
 #include "GPU/GPURenderPipeline.h"
+#include "GPU/GPUBuffer.h"
 #include <iostream>
 
 int main(int, char**){
@@ -47,6 +48,33 @@ int main(int, char**){
     )";
     GPUShader g_shader(g_device, shaderSource);
     GPURenderPipeline g_Pipeline(g_device, g_shader, g_swapChain.swapChainFormat);
+
+    GPUBuffer buffer1(g_device, 16, CopyDst | CopySrc);
+    GPUBuffer buffer2(g_device, 16, CopyDst | MapRead);
+
+    std::cout << "Uploading data to the GPU.. \n";
+    std::vector<unsigned char> numbers(16);
+    for (unsigned char i = 0; i < 16; ++i) numbers[i] = i;
+
+    buffer1.Write(0, numbers.data(), numbers.size());
+
+    std::cout << "Start copy buffer1 to buffer 2 \n";
+
+    GPUCommandBuffer CopyCommand(g_device);
+    CopyCommand.CopyBufferToBuffer(buffer1, 0, buffer2, 0, 16);
+    CopyCommand.CreateBuffer();
+    CopyCommand.SubmitBuffer();
+
+    std::cout << "Start downloading result data from the GPU... \n";
+
+    buffer2.AsyncRead([](unsigned char *bufferdata) {
+        std::cout << "bufferData = [";
+        for (unsigned char i = 0; i < 16; ++i) {
+            if (i > 0) std::cout << ", ";
+            std::cout << (int) bufferdata[i];
+        }
+        std::cout << "]\n";
+    }, 0, 16);
 
     while (!w.Update()){
         // Get the texture where to draw the next frame
