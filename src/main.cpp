@@ -8,6 +8,7 @@
 #include "GPU/GPUShader.h"
 #include "GPU/GPURenderPipeline.h"
 #include "GPU/GPUBuffer.h"
+#include "GPU/GPUVertexBuffer.h"
 #include <iostream>
 
 int main(int, char**){
@@ -21,24 +22,17 @@ int main(int, char**){
     //g_adapter.inspect();
 
     GPUDevice g_device(g_adapter);
-    //g_device.inspect()
+    //g_device.inspect();
 
     GPUSwapChain g_swapChain(g_surface, g_adapter, g_device);
 
     WGPUQueue queue = wgpuDeviceGetQueue(g_device.device);
 
+    std::cout << "Create shader \n";
     const char* shaderSource = R"(
     @vertex
-    fn vs_main(@builtin(vertex_index) in_vertex_index: u32) -> @builtin(position) vec4<f32> {
-        var p = vec2f(0.0, 0.0);
-        if (in_vertex_index == 0u) {
-            p = vec2f(-0.5, -0.5);
-        } else if (in_vertex_index == 1u) {
-            p = vec2f(0.5, -0.5);
-        } else {
-            p = vec2f(0.0, 0.5);
-        }
-        return vec4f(p, 0.0, 1.0);
+    fn vs_main(@location(0) in_vertex_position: vec2f) -> @builtin(position) vec4f {
+        return vec4f(in_vertex_position, 0.0, 1.0);
     }
 
     @fragment
@@ -47,7 +41,26 @@ int main(int, char**){
     }
     )";
     GPUShader g_shader(g_device, shaderSource);
-    GPURenderPipeline g_Pipeline(g_device, g_shader, g_swapChain.swapChainFormat);
+
+    // create vertex buffer
+    std::cout << "Create vertex buffer\n";
+    std::vector<float> vertexData = {
+            // x0, y0
+            -0.5, -0.5,
+
+            // x1, y1
+            +0.5, -0.5,
+
+            // x2, y2
+            +0.0, +0.5
+    };
+    int vertexCount = static_cast<int>(vertexData.size() / 2);
+    GPUVertexBuffer vertexBuffer1(g_device, vertexCount);
+    std::cout << "write to vertex buffer\n";
+    vertexBuffer1.Write(0, vertexData.data(), sizeof(float)*3*2);
+
+    std::cout << "Create pipeline \n";
+    GPURenderPipeline g_Pipeline(g_device, g_shader, g_swapChain.swapChainFormat, vertexBuffer1);
 
     GPUBuffer buffer1(g_device, 16, CopyDst | CopySrc);
     GPUBuffer buffer2(g_device, 16, CopyDst | MapRead);
@@ -90,6 +103,7 @@ int main(int, char**){
 
         GPURenderPass g_RenderPass = g_Command.BeginRenderPass({0.0f, 1.0f, 0.0f, 1.0f}, nextTexture);
         g_RenderPass.SetPipeline(g_Pipeline);
+        g_RenderPass.SetVertexBuffer(0, vertexBuffer1, 0, vertexData.size() * sizeof(float));
         g_RenderPass.Draw( 3, 1, 0, 0);
         g_RenderPass.EndRenderPass();
 

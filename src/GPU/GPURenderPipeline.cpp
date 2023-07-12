@@ -4,13 +4,15 @@
 
 #include "GPURenderPipeline.h"
 
-GPURenderPipeline::GPURenderPipeline(GPUDevice& device, GPUShader& shader, WGPUTextureFormat swapChainFormat) {
+GPURenderPipeline::GPURenderPipeline(GPUDevice& device, GPUShader& shader, WGPUTextureFormat swapChainFormat, GPUVertexBuffer& VertexBuffers) {
     pipelineDesc.nextInChain = nullptr;
 
     // vertex state
     pipelineDesc.vertex.bufferCount = 0;
     pipelineDesc.vertex.buffers = nullptr;
     // shader
+    pipelineDesc.vertex.bufferCount = 1;
+    pipelineDesc.vertex.buffers = &VertexBuffers.vertexBufferLayout;
     pipelineDesc.vertex.module = shader.shaderModule;
     pipelineDesc.vertex.entryPoint = "vs_main";
     pipelineDesc.vertex.constantCount = 0;

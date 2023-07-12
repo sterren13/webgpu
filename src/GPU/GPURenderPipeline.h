@@ -7,10 +7,11 @@
 #include <webgpu/webgpu.h>
 #include "GPUShader.h"
 #include "GPUDevice.h"
+#include "GPUVertexBuffer.h"
 
 class GPURenderPipeline {
 public:
-    GPURenderPipeline(GPUDevice& device, GPUShader& shader, WGPUTextureFormat swapChainFormat);
+    GPURenderPipeline(GPUDevice& device, GPUShader& shader, WGPUTextureFormat swapChainFormat, GPUVertexBuffer& VertexBuffers);
 private:
     friend class GPURenderPass;
 

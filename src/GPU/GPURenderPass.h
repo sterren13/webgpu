@@ -6,14 +6,15 @@
 #define TESTWEBGPU_GPURENDERPASS_H
 #include <webgpu/webgpu.h>
 #include "GPURenderPipeline.h"
+#include "GPUVertexBuffer.h"
 
 class GPURenderPass {
 public:
     GPURenderPass(WGPURenderPassEncoder e);
 
     void SetPipeline(GPURenderPipeline& pipeline);
+    void SetVertexBuffer(uint32_t slot, GPUVertexBuffer &buffer, uint64_t offset, uint64_t size);
     //TODO void SetIndexBuffer();
-    //TODO void SetVertexBuffer();
     void Draw(uint32_t vertexCount, uint32_t instanceCount, uint32_t firstVertex, uint32_t firstInstance);
     //TODO void DrawIndexed();
     //TODO void DrawIndirect();
