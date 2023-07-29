@@ -8,7 +8,6 @@
 #include "GPUDevice.h"
 #include <string>
 #include <initializer_list>
-#include <vector>
 
 enum class DataType {
 //  vec 1       vec 2       vec 3       vec 4
@@ -25,55 +24,60 @@ enum class DataType {
     Float32,    Float32x2,  Float32x3,  Float32x4,
     Uint32,     Uint32x2,   Uint32x3,   Uint32x4,
     Int32,      Int32x2,    Int32x3,    Int32x4,
-    Force32
 };
 
 class BufferElement {
 public:
-    BufferElement() = default;
     BufferElement(DataType type, const std::string& name);
 
     inline void SetName(std::string& name) {Name = name;}
-    inline void SetType(DataType type) {Type = type; Size = Get_DataTypeSize(type);}
+    inline void SetType(DataType type) {Type = type; size = Get_DataTypeSize(type);}
 
     [[nodiscard]] inline std::string GetName() const{return Name;}
     [[nodiscard]] inline DataType GetType() const{return Type;}
-    [[nodiscard]] inline uint64_t GetSize() const{return Size;}
+    [[nodiscard]] inline uint64_t Size() const{return size;}
     [[nodiscard]] inline uint64_t GetComponentCount() const{return ComponentCount;}
+    [[nodiscard]] inline uint64_t Offset() const {return offset;}
 private:
     static const uint64_t Get_DataTypeSize(DataType type);
     static const uint64_t Get_ComponentCount(DataType type);
 private:
+    friend class BufferLayout;
+private:
     std::string Name = "";
     DataType Type = DataType::Undefined;
-    uint64_t Size = 0;
+    uint64_t size = 0;
     uint64_t ComponentCount = 0;
+    uint64_t offset = 0;
 };
 
 class BufferLayout {
 public:
-    BufferLayout() = default;
-    BufferLayout(std::initializer_list<BufferElement> elements);
+    BufferLayout(std::initializer_list<BufferElement> layout);
+    [[nodiscard]] inline uint64_t Stride() const {return stride;}
 
-    [[nodiscard]] inline size_t GetStride() const {return Stride;}
-    void PusheLements(std::initializer_list<BufferElement> elements);
-
+    std::vector<BufferElement>::iterator begin() {return elements.begin();}
+    std::vector<BufferElement>::iterator end() {return elements.end();}
+    [[nodiscard]] std::vector<BufferElement>::const_iterator begin() const {return elements.begin();}
+    [[nodiscard]] std::vector<BufferElement>::const_iterator end() const {return elements.end();}
 private:
-    void Calculate();
-    std::vector<BufferElement> BufferElements;
-    std::vector<WGPUVertexAttribute> BufferAttributes;
-    uint64_t Stride = 0;
+    uint64_t stride = 0;
+    std::vector<BufferElement> elements;
 };
 
 class GPUVertexBuffer : public GPUBuffer {
 public:
-    GPUVertexBuffer(GPUDevice& device, uint64_t VertexCount);
+    GPUVertexBuffer(GPUDevice& device, BufferLayout layout, uint64_t vertexCount);
+
+private:
+    static WGPUVertexFormat GetWGPUFormat(DataType type);
 
 private:
     friend class GPURenderPass;
     friend class GPURenderPipeline;
 
-    WGPUVertexAttribute vertexAttrib;
+private:
+    std::vector<WGPUVertexAttribute> vertexAttribs;
     WGPUVertexBufferLayout vertexBufferLayout{};
 };
 

@@ -4,7 +4,7 @@
 
 #ifndef TESTWEBGPU_WINDOW_H
 #define TESTWEBGPU_WINDOW_H
-#define GLFW_PLATFORM GLFW_PLATFORM_WAYLAND
+//#define GLFW_PLATFORM GLFW_PLATFORM_WAYLAND
 #include "GLFW/glfw3.h"
 
 class window {

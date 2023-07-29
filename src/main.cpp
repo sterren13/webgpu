@@ -55,7 +55,7 @@ int main(int, char**){
             +0.0, +0.5
     };
     int vertexCount = static_cast<int>(vertexData.size() / 2);
-    GPUVertexBuffer vertexBuffer1(g_device, vertexCount);
+    GPUVertexBuffer vertexBuffer1(g_device, BufferLayout({BufferElement(DataType::Float32x2, "Pos")}), vertexCount);
     std::cout << "write to vertex buffer\n";
     vertexBuffer1.Write(0, vertexData.data(), sizeof(float)*3*2);
 
