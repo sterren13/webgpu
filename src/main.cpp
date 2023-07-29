@@ -30,14 +30,26 @@ int main(int, char**){
 
     std::cout << "Create shader \n";
     const char* shaderSource = R"(
+    struct VertexInput {
+        @location(0) position: vec2f,
+        @location(1) color: vec3f,
+    };
+    struct VertexOutput {
+        @builtin(position) position: vec4f,
+        @location(0) color: vec3f,
+    };
+
     @vertex
-    fn vs_main(@location(0) in_vertex_position: vec2f) -> @builtin(position) vec4f {
-        return vec4f(in_vertex_position, 0.0, 1.0);
+    fn vs_main(in: VertexInput) -> VertexOutput {
+        var out: VertexOutput;
+        out.position = vec4f(in.position, 0.0, 1.0);
+        out.color = in.color; // forward to the fragment shader
+        return out;
     }
 
     @fragment
-    fn fs_main() -> @location(0) vec4f {
-        return vec4f(0.0, 0.4, 1.0, 1.0);
+    fn fs_main(in: VertexOutput) -> @location(0) vec4f {
+        return vec4f(in.color, 1.0);
     }
     )";
     GPUShader g_shader(g_device, shaderSource);
@@ -45,19 +57,24 @@ int main(int, char**){
     // create vertex buffer
     std::cout << "Create vertex buffer\n";
     std::vector<float> vertexData = {
-            // x0, y0
-            -0.5, -0.5,
+            // x0, y0,  r,  g,  b
+            -0.5, -0.5, 1.0, 0.0, 0.0,
 
             // x1, y1
-            +0.5, -0.5,
+            +0.5, -0.5, 0.0, 1.0, 0.0,
 
             // x2, y2
-            +0.0, +0.5
+            +0.0, +0.5, 0.0, 0.0, 1.0
     };
-    int vertexCount = static_cast<int>(vertexData.size() / 2);
-    GPUVertexBuffer vertexBuffer1(g_device, BufferLayout({BufferElement(DataType::Float32x2, "Pos")}), vertexCount);
+
+    int vertexCount = static_cast<int>(vertexData.size() / 5);
+    GPUVertexBuffer vertexBuffer1(g_device, BufferLayout({
+        BufferElement(DataType::Float32x2, "Pos"),
+        BufferElement(DataType::Float32x3, "Color")
+    }), vertexCount);
+
     std::cout << "write to vertex buffer\n";
-    vertexBuffer1.Write(0, vertexData.data(), sizeof(float)*3*2);
+    vertexBuffer1.Write(0, vertexData.data(), sizeof(float)*5*3);
 
     std::cout << "Create pipeline \n";
     GPURenderPipeline g_Pipeline(g_device, g_shader, g_swapChain.swapChainFormat, vertexBuffer1);
@@ -101,7 +118,7 @@ int main(int, char**){
 
         GPUCommandBuffer g_Command(g_device);
 
-        GPURenderPass g_RenderPass = g_Command.BeginRenderPass({0.0f, 1.0f, 0.0f, 1.0f}, nextTexture);
+        GPURenderPass g_RenderPass = g_Command.BeginRenderPass({0.0f, 0.0f, 0.0f, 1.0f}, nextTexture);
         g_RenderPass.SetPipeline(g_Pipeline);
         g_RenderPass.SetVertexBuffer(0, vertexBuffer1, 0, vertexData.size() * sizeof(float));
         g_RenderPass.Draw( 3, 1, 0, 0);
