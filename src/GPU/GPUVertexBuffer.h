@@ -77,6 +77,7 @@ private:
     friend class GPURenderPipeline;
 
 private:
+    uint64_t Size;
     std::vector<WGPUVertexAttribute> vertexAttribs;
     WGPUVertexBufferLayout vertexBufferLayout{};
 };

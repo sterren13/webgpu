@@ -24,7 +24,9 @@ add_executable(testWebGPU
         src/GPU/GPUCommandBuffer.cpp
         src/GPU/GPURenderPass.cpp
         src/GPU/glfw3webgpu.h
-        src/GPU/glfw3webgpu.c src/GPU/GPUSwapChain.cpp src/GPU/GPUSwapChain.h src/GPU/GPURenderPipeline.cpp src/GPU/GPURenderPipeline.h src/GPU/GPUShader.cpp src/GPU/GPUShader.h src/GPU/GPUBuffer.cpp src/GPU/GPUBuffer.h src/GPU/GPUVertexBuffer.cpp src/GPU/GPUVertexBuffer.h)
+        src/GPU/glfw3webgpu.c src/GPU/GPUSwapChain.cpp src/GPU/GPUSwapChain.h src/GPU/GPURenderPipeline.cpp src/GPU/GPURenderPipeline.h src/GPU/GPUShader.cpp src/GPU/GPUShader.h src/GPU/GPUBuffer.cpp src/GPU/GPUBuffer.h src/GPU/GPUVertexBuffer.cpp src/GPU/GPUVertexBuffer.h
+        src/GPU/GPUIndexBuffer.cpp
+        src/GPU/GPUIndexBuffer.h)
 
 include_directories(src lib/webgpu/Include)
 

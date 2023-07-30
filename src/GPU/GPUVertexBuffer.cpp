@@ -89,7 +89,8 @@ BufferLayout::BufferLayout(std::initializer_list<BufferElement> layout) : elemen
     }
 }
 
-GPUVertexBuffer::GPUVertexBuffer(GPUDevice& device, BufferLayout layout, uint64_t vertexCount) : GPUBuffer(device, layout.Stride()*vertexCount, CopyDst | Vertex) {
+GPUVertexBuffer::GPUVertexBuffer(GPUDevice& device, BufferLayout layout, uint64_t vertexCount)
+    : GPUBuffer(device, layout.Stride()*vertexCount, CopyDst | Vertex), Size(layout.Stride()*vertexCount) {
     uint32_t Location = 0;
     for (auto element : layout){
         WGPUVertexAttribute attribute;

@@ -9,6 +9,7 @@
 #include "GPU/GPURenderPipeline.h"
 #include "GPU/GPUBuffer.h"
 #include "GPU/GPUVertexBuffer.h"
+#include "GPU/GPUIndexBuffer.h"
 #include <iostream>
 
 int main(int, char**){
@@ -57,14 +58,11 @@ int main(int, char**){
     // create vertex buffer
     std::cout << "Create vertex buffer\n";
     std::vector<float> vertexData = {
-            // x0, y0,  r,  g,  b
-            -0.5, -0.5, 1.0, 0.0, 0.0,
-
-            // x1, y1
-            +0.5, -0.5, 0.0, 1.0, 0.0,
-
-            // x2, y2
-            +0.0, +0.5, 0.0, 0.0, 1.0
+            // x,   y,     r,   g,   b
+            -0.5, -0.5,   1.0, 0.0, 0.0,
+            +0.5, -0.5,   0.0, 1.0, 0.0,
+            +0.5, +0.5,   0.0, 0.0, 1.0,
+            -0.5, +0.5,   1.0, 1.0, 0.0
     };
 
     int vertexCount = static_cast<int>(vertexData.size() / 5);
@@ -74,7 +72,15 @@ int main(int, char**){
     }), vertexCount);
 
     std::cout << "write to vertex buffer\n";
-    vertexBuffer1.Write(0, vertexData.data(), sizeof(float)*5*3);
+    vertexBuffer1.Write(0, vertexData.data(), sizeof(float)*5*4);
+
+    std::vector<uint16_t> indexData = {
+            0, 1, 2, // Triangle #01
+            0, 2, 3  // Triangle #1
+    };
+
+    GPUIndexBuffer IndexBuffer(g_device, 6, IndexFormat::Uint16);
+    IndexBuffer.Write(0, indexData.data(), sizeof(uint16_t)*6);
 
     std::cout << "Create pipeline \n";
     GPURenderPipeline g_Pipeline(g_device, g_shader, g_swapChain.swapChainFormat, vertexBuffer1);
@@ -120,8 +126,10 @@ int main(int, char**){
 
         GPURenderPass g_RenderPass = g_Command.BeginRenderPass({0.0f, 0.0f, 0.0f, 1.0f}, nextTexture);
         g_RenderPass.SetPipeline(g_Pipeline);
-        g_RenderPass.SetVertexBuffer(0, vertexBuffer1, 0, vertexData.size() * sizeof(float));
-        g_RenderPass.Draw( 3, 1, 0, 0);
+        g_RenderPass.SetVertexBuffer(0, vertexBuffer1, 0);
+        g_RenderPass.SetIndexBuffer(IndexBuffer, 0);
+        //g_RenderPass.Draw( 3, 1, 0, 0);
+        g_RenderPass.DrawIndexed(6, 1, 0, 0);
         g_RenderPass.EndRenderPass();
 
         wgpuTextureViewRelease(nextTexture);
