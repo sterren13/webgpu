@@ -18,6 +18,7 @@ public:
     friend class GPUDevice;
     friend class GPUSwapChain;
     WGPUAdapter adapter;
+    WGPUSupportedLimits limits;
     WGPURequestAdapterOptions options;
 };
 

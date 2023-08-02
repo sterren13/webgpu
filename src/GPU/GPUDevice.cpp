@@ -8,6 +8,40 @@
 #include <vector>
 #include <cassert>
 
+void setDefault(WGPULimits &limits) {
+    limits.maxTextureDimension1D = 0;
+    limits.maxTextureDimension2D = 0;
+    limits.maxTextureDimension3D = 0;
+    limits.maxTextureArrayLayers = 0;
+    limits.maxBindGroups = 0;
+    limits.maxBindingsPerBindGroup = 0;
+    limits.maxDynamicUniformBuffersPerPipelineLayout = 0;
+    limits.maxDynamicStorageBuffersPerPipelineLayout = 0;
+    limits.maxSampledTexturesPerShaderStage = 0;
+    limits.maxSamplersPerShaderStage = 0;
+    limits.maxStorageBuffersPerShaderStage = 0;
+    limits.maxStorageTexturesPerShaderStage = 0;
+    limits.maxUniformBuffersPerShaderStage = 0;
+    limits.maxUniformBufferBindingSize = 0;
+    limits.maxStorageBufferBindingSize = 0;
+    limits.minUniformBufferOffsetAlignment = 0;
+    limits.minStorageBufferOffsetAlignment = 0;
+    limits.maxVertexBuffers = 0;
+    limits.maxBufferSize = 0;
+    limits.maxVertexAttributes = 0;
+    limits.maxVertexBufferArrayStride = 0;
+    limits.maxInterStageShaderComponents = 0;
+    limits.maxInterStageShaderVariables = 0;
+    limits.maxColorAttachments = 0;
+    limits.maxColorAttachmentBytesPerSample = 0;
+    limits.maxComputeWorkgroupStorageSize = 0;
+    limits.maxComputeInvocationsPerWorkgroup = 0;
+    limits.maxComputeWorkgroupSizeX = 0;
+    limits.maxComputeWorkgroupSizeY = 0;
+    limits.maxComputeWorkgroupSizeZ = 0;
+    limits.maxComputeWorkgroupsPerDimension = 0;
+}
+
 GPUDevice::GPUDevice(GPUAdapter& adapter) {
     descriptor = {
             .nextInChain = nullptr,
@@ -15,6 +49,20 @@ GPUDevice::GPUDevice(GPUAdapter& adapter) {
             .requiredFeaturesCount = 0,
             .requiredLimits = nullptr,
     };
+
+    setDefault(requiredLimits.limits);
+    requiredLimits.limits.maxVertexAttributes = 2;
+    requiredLimits.limits.maxVertexBuffers = 1;
+    requiredLimits.limits.maxBufferSize = 6 * 5 * sizeof(float);
+    requiredLimits.limits.maxVertexBufferArrayStride = 5 * sizeof(float);
+    requiredLimits.limits.minStorageBufferOffsetAlignment = adapter.limits.limits.minStorageBufferOffsetAlignment;
+    requiredLimits.limits.minUniformBufferOffsetAlignment = adapter.limits.limits.minUniformBufferOffsetAlignment;
+    requiredLimits.limits.maxInterStageShaderComponents = 3;
+    requiredLimits.limits.maxBindGroups = 1;
+    requiredLimits.limits.maxUniformBuffersPerShaderStage = 1;
+    requiredLimits.limits.maxUniformBufferBindingSize = 16 * 4;
+    descriptor.requiredLimits = &requiredLimits;
+
     struct UserData {
         WGPUDevice device = nullptr;
         bool requestEnded = false;

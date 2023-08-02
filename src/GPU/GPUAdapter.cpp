@@ -40,6 +40,10 @@ GPUAdapter::GPUAdapter(GPUInstance& instance, GPUSurface& surface) {
     adapter = userData.adapter;
 
     assert(userData.requestEnded);
+
+    limits = {};
+    limits.nextInChain = nullptr;
+    bool success = wgpuAdapterGetLimits(adapter, &limits);
 }
 
 GPUAdapter::~GPUAdapter() {

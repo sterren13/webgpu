@@ -24,6 +24,7 @@ public:
 
     WGPUDevice device;
     WGPUDeviceDescriptor descriptor;
+    WGPURequiredLimits requiredLimits{};
 };
 
 

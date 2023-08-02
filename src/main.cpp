@@ -128,7 +128,6 @@ int main(int, char**){
         g_RenderPass.SetPipeline(g_Pipeline);
         g_RenderPass.SetVertexBuffer(0, vertexBuffer1, 0);
         g_RenderPass.SetIndexBuffer(IndexBuffer, 0);
-        //g_RenderPass.Draw( 3, 1, 0, 0);
         g_RenderPass.DrawIndexed(6, 1, 0, 0);
         g_RenderPass.EndRenderPass();
 
