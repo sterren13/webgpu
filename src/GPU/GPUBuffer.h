@@ -30,6 +30,7 @@ public:
 private:
     friend class GPUCommandBuffer;
     friend class GPURenderPass;
+    friend class GPUBindingGroup;
 
     static void ReadCallBack(WGPUBufferMapAsyncStatus status, void* pUserData);
 

@@ -32,3 +32,7 @@ void GPURenderPass::SetIndexBuffer(GPUIndexBuffer& indexBuffer, uint64_t offset)
 void GPURenderPass::DrawIndexed(uint64_t IndexCount, uint64_t InstanceCount, uint64_t FirstIndex, uint64_t FirstInstance) {
     wgpuRenderPassEncoderDrawIndexed(encoder, IndexCount, InstanceCount, FirstIndex, 0, 0);
 }
+
+void GPURenderPass::SetBindGroup(GPUBindingGroup &bindingGroup, uint32_t slot) {
+    wgpuRenderPassEncoderSetBindGroup(encoder, slot, bindingGroup.bindGroup, 0, nullptr);
+}

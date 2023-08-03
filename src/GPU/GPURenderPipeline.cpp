@@ -4,8 +4,11 @@
 
 #include "GPURenderPipeline.h"
 
-GPURenderPipeline::GPURenderPipeline(GPUDevice& device, GPUShader& shader, WGPUTextureFormat swapChainFormat, GPUVertexBuffer& VertexBuffers) {
+GPURenderPipeline::GPURenderPipeline(GPUDevice& device, GPUShader& shader, WGPUTextureFormat swapChainFormat, GPUVertexBuffer& VertexBuffers, GPUBindingGroup& bindingGroup) {
     pipelineDesc.nextInChain = nullptr;
+
+    // binding groups
+    pipelineDesc.layout = bindingGroup.layout;
 
     // vertex state
     pipelineDesc.vertex.bufferCount = 0;

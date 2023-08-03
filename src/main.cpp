@@ -10,6 +10,8 @@
 #include "GPU/GPUBuffer.h"
 #include "GPU/GPUVertexBuffer.h"
 #include "GPU/GPUIndexBuffer.h"
+#include "GPU/GPUUniformBuffer.h"
+#include "GPU/GPUBindingGroup.h"
 #include <iostream>
 
 int main(int, char**){
@@ -31,6 +33,8 @@ int main(int, char**){
 
     std::cout << "Create shader \n";
     const char* shaderSource = R"(
+    @group(0) @binding(0) var<uniform> uTime: f32;
+
     struct VertexInput {
         @location(0) position: vec2f,
         @location(1) color: vec3f,
@@ -43,8 +47,12 @@ int main(int, char**){
     @vertex
     fn vs_main(in: VertexInput) -> VertexOutput {
         var out: VertexOutput;
-        out.position = vec4f(in.position, 0.0, 1.0);
-        out.color = in.color; // forward to the fragment shader
+        let ratio = 640.0 / 480.0;
+        // We move the scene depending on the time
+        var offset = vec2f(-0.6875, -0.463);
+        offset += 0.3 * vec2f(cos(uTime), sin(uTime));
+        out.position = vec4f(in.position.x + offset.x, (in.position.y + offset.y) * ratio, 0.0, 1.0);
+        out.color = in.color;
         return out;
     }
 
@@ -82,8 +90,11 @@ int main(int, char**){
     GPUIndexBuffer IndexBuffer(g_device, 6, IndexFormat::Uint16);
     IndexBuffer.Write(0, indexData.data(), sizeof(uint16_t)*6);
 
+    GPUUniformBuffer uniform(g_device, sizeof(float ));
+    GPUBindingGroup bindingGroup(g_device, 0, ShaderStage::Vertex, uniform);
+
     std::cout << "Create pipeline \n";
-    GPURenderPipeline g_Pipeline(g_device, g_shader, g_swapChain.swapChainFormat, vertexBuffer1);
+    GPURenderPipeline g_Pipeline(g_device, g_shader, g_swapChain.swapChainFormat, vertexBuffer1, bindingGroup);
 
     GPUBuffer buffer1(g_device, 16, CopyDst | CopySrc);
     GPUBuffer buffer2(g_device, 16, CopyDst | MapRead);
@@ -112,7 +123,15 @@ int main(int, char**){
         std::cout << "]\n";
     }, 0, 16);
 
+    float currentTime = 1.0f;
+    uniform.Write(0, &currentTime, sizeof(float));
+
     while (!w.Update()){
+
+        // update uniform buffer
+        float t = static_cast<float>(glfwGetTime());
+        uniform.Write(0, &t, sizeof(float ));
+
         // Get the texture where to draw the next frame
         WGPUTextureView nextTexture = g_swapChain.CurrentTextureView();
         // Getting the texture may fail, in particular if the window has been resized
@@ -128,6 +147,8 @@ int main(int, char**){
         g_RenderPass.SetPipeline(g_Pipeline);
         g_RenderPass.SetVertexBuffer(0, vertexBuffer1, 0);
         g_RenderPass.SetIndexBuffer(IndexBuffer, 0);
+
+        g_RenderPass.SetBindGroup(bindingGroup, 0);
         g_RenderPass.DrawIndexed(6, 1, 0, 0);
         g_RenderPass.EndRenderPass();
 

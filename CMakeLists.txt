@@ -28,7 +28,9 @@ add_executable(testWebGPU
         src/GPU/GPUIndexBuffer.cpp
         src/GPU/GPUIndexBuffer.h
         src/GPU/GPUUniformBuffer.cpp
-        src/GPU/GPUUniformBuffer.h)
+        src/GPU/GPUUniformBuffer.h
+        src/GPU/GPUBindingGroup.cpp
+        src/GPU/GPUBindingGroup.h)
 
 include_directories(src lib/webgpu/Include)
 

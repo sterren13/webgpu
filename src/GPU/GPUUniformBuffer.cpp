@@ -4,6 +4,7 @@
 
 #include "GPUUniformBuffer.h"
 
-GPUUniformBuffer::GPUUniformBuffer(GPUDevice& device, uint64_t size) : GPUBuffer(device, size, CopyDst | Uniform) {
+GPUUniformBuffer::GPUUniformBuffer(GPUDevice& device, uint64_t size)
+                : GPUBuffer(device, size, CopyDst | Uniform), m_size(size) {
 
 }

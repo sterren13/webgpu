@@ -9,9 +9,10 @@
 class GPUUniformBuffer : public GPUBuffer {
 public:
     GPUUniformBuffer(GPUDevice& device, uint64_t size);
+    inline uint64_t Size() const {return m_size;}
 
 private:
-
+    uint64_t m_size;
 };
 
 

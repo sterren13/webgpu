@@ -21,6 +21,7 @@ public:
     friend class GPUShader;
     friend class GPURenderPipeline;
     friend class GPUBuffer;
+    friend class GPUBindingGroup;
 
     WGPUDevice device;
     WGPUDeviceDescriptor descriptor;

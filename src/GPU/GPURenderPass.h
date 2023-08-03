@@ -8,6 +8,7 @@
 #include "GPURenderPipeline.h"
 #include "GPUVertexBuffer.h"
 #include "GPUIndexBuffer.h"
+#include "GPUBindingGroup.h"
 
 /**
  * @class GPURenderPass
@@ -103,9 +104,10 @@ public:
 
     void DrawIndexed(uint64_t IndexCount, uint64_t InstanceCount, uint64_t FirstIndex, uint64_t FirstInstance);
 
+    void SetBindGroup(GPUBindingGroup& bindingGroup, uint32_t slot);
+
     //TODO void DrawIndirect();
     //TODO void DrawIndexedIndirect();
-    //TODO void SetBindGroup();
     //TODO void PushDebugGroup();
     //TODO void PopDebugGroup();
     //TODO void InsertDebugMarker();
