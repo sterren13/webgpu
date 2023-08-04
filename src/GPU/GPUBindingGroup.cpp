@@ -23,31 +23,77 @@ void setDefault(WGPUBindGroupLayoutEntry &bindingLayout) {
     bindingLayout.texture.viewDimension = WGPUTextureViewDimension_Undefined;
 }
 
-GPUBindingGroup::GPUBindingGroup(GPUDevice &device, uint32_t slot, ShaderStage stage, GPUUniformBuffer& uniformBuffer) {
-    // bindingLayout TODO list of bindinglayouts and texturers
-    setDefault(bindingLayout);
-    bindingLayout.binding = slot;
-    switch (stage) {
-        case ShaderStage::Vertex:
-            bindingLayout.visibility = WGPUShaderStage_Vertex;
-            break;
-        case ShaderStage::Fragment:
-            bindingLayout.visibility = WGPUShaderStage_Fragment;
-            break;
-        case ShaderStage::Compute:
-            bindingLayout.visibility = WGPUShaderStage_Compute;
-            break;
-        default:
-            bindingLayout.visibility = WGPUShaderStage_None;
-            break;
+GPUBindingGroup::GPUBindingGroup(GPUDevice &device, std::initializer_list<TextureBinding> Textures, std::initializer_list<UniformBinding> UniformBuffers) {
+    // binding layouts Uniforms and bindings
+    for (auto uniform : UniformBuffers){
+        // create layout
+        WGPUBindGroupLayoutEntry LayoutEntry;
+        setDefault(LayoutEntry);
+        LayoutEntry.binding = uniform.Slot;
+        switch (uniform.Stage) {
+            case ShaderStage::Vertex:
+                LayoutEntry.visibility = WGPUShaderStage_Vertex;
+                break;
+            case ShaderStage::Fragment:
+                LayoutEntry.visibility = WGPUShaderStage_Fragment;
+                break;
+            case ShaderStage::Compute:
+                LayoutEntry.visibility = WGPUShaderStage_Compute;
+                break;
+            default:
+                LayoutEntry.visibility = WGPUShaderStage_None;
+                break;
+        }
+        LayoutEntry.buffer.type = WGPUBufferBindingType_Uniform;
+        LayoutEntry.buffer.minBindingSize = uniform.uniformBuffer.Size();
+        bindingLayouts.push_back(LayoutEntry);
+
+        // crate entries
+        WGPUBindGroupEntry binding{};
+        binding.nextInChain = nullptr;
+        binding.binding = uniform.Slot;
+        binding.buffer = uniform.uniformBuffer.buffer;
+        binding.offset = uniform.Offset;
+        binding.size = uniform.Size;
+        bindings.push_back(binding);
     }
-    bindingLayout.buffer.type = WGPUBufferBindingType_Uniform;
-    bindingLayout.buffer.minBindingSize = uniformBuffer.Size(); // TODO set to input in list of uniform buffers
+
+    // binding Layouts textures and bindings
+    for (auto Texture : Textures){
+        // create layout
+        WGPUBindGroupLayoutEntry LayoutEntry;
+        setDefault(LayoutEntry);
+
+        LayoutEntry.binding = Texture.Slot;
+        switch (Texture.Stage) {
+            case ShaderStage::Vertex:
+                LayoutEntry.visibility = WGPUShaderStage_Vertex;
+                break;
+            case ShaderStage::Fragment:
+                LayoutEntry.visibility = WGPUShaderStage_Fragment;
+                break;
+            case ShaderStage::Compute:
+                LayoutEntry.visibility = WGPUShaderStage_Compute;
+                break;
+            default:
+                LayoutEntry.visibility = WGPUShaderStage_None;
+                break;
+        }
+        LayoutEntry.texture.sampleType = WGPUTextureSampleType_Float; // TODO change to texture property's
+        LayoutEntry.texture.viewDimension = WGPUTextureViewDimension_2D; // TODO change to texture property's
+        bindingLayouts.push_back(LayoutEntry);
+
+        // crate entries
+        WGPUBindGroupEntry binding{};
+        binding.binding = Texture.Slot;
+        binding.textureView= Texture.texture.textureView;
+        bindings.push_back(binding);
+    }
 
     // Crate binding group layout
     bindGroupLayoutDesc.nextInChain = nullptr;
-    bindGroupLayoutDesc.entryCount = 1; // TODO change to layout count
-    bindGroupLayoutDesc.entries = &bindingLayout; // TODO change to list of binding layouts
+    bindGroupLayoutDesc.entryCount = bindingLayouts.size();
+    bindGroupLayoutDesc.entries = bindingLayouts.data();
     bindGroupLayout = wgpuDeviceCreateBindGroupLayout(device.device, &bindGroupLayoutDesc);
 
     // create pipeline layout
@@ -56,18 +102,10 @@ GPUBindingGroup::GPUBindingGroup(GPUDevice &device, uint32_t slot, ShaderStage s
     layoutDesc.bindGroupLayouts = &bindGroupLayout;
     layout = wgpuDeviceCreatePipelineLayout(device.device, &layoutDesc);
 
-    // crate entries
-    // TODO list of bindings
-    binding.nextInChain = nullptr;
-    binding.binding = slot; // TODO set to uniform buffer inputs
-    binding.buffer = uniformBuffer.buffer; // TODO set input uniform buffer
-    binding.offset = 0; // TODO input in list of uniform buffers
-    binding.size = uniformBuffer.Size(); // TODO set to input in list of uniform buffers
-
     // create binding group
     bindGroupDesc.nextInChain = nullptr;
     bindGroupDesc.layout = bindGroupLayout;
     bindGroupDesc.entryCount = bindGroupLayoutDesc.entryCount;
-    bindGroupDesc.entries = &binding; // TODO list of entries
+    bindGroupDesc.entries = bindings.data();
     bindGroup = wgpuDeviceCreateBindGroup(device.device, &bindGroupDesc);
 }

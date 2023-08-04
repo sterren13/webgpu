@@ -6,6 +6,9 @@
 #define TESTWEBGPU_GPUBINDINGGROUP_H
 #include "GPUDevice.h"
 #include "GPUUniformBuffer.h"
+#include "GPUTexture.h"
+#include <initializer_list>
+#include <vector>
 
 enum class ShaderStage {
     None,
@@ -14,20 +17,34 @@ enum class ShaderStage {
     Compute
 };
 
+struct UniformBinding {
+    uint32_t Slot;
+    ShaderStage Stage; // TODO fix | for multiple options
+    uint64_t Offset;
+    uint64_t Size;
+    GPUUniformBuffer& uniformBuffer;
+};
+
+struct TextureBinding {
+    uint32_t Slot;
+    ShaderStage Stage;
+    GPUTexture& texture;
+};
+
 class GPUBindingGroup {
 public:
-    GPUBindingGroup(GPUDevice& device, uint32_t slot, ShaderStage stage, GPUUniformBuffer& uniformBuffer);
+    GPUBindingGroup(GPUDevice& device, std::initializer_list<TextureBinding> Textures, std::initializer_list<UniformBinding> UniformBuffers);
 
 private:
     friend class GPURenderPipeline;
     friend class GPURenderPass;
 
 private:
-    WGPUBindGroupLayoutEntry bindingLayout{};
+    std::vector<WGPUBindGroupLayoutEntry> bindingLayouts;
     WGPUPipelineLayoutDescriptor layoutDesc{};
     WGPUBindGroupLayoutDescriptor bindGroupLayoutDesc{};
     WGPUBindGroupLayout bindGroupLayout = nullptr;
-    WGPUBindGroupEntry binding{};
+    std::vector<WGPUBindGroupEntry> bindings;
     WGPUBindGroupDescriptor bindGroupDesc{};
     WGPUPipelineLayout layout;
     WGPUBindGroup bindGroup;

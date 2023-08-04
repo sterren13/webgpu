@@ -75,6 +75,24 @@ public:
     void SetIndexBuffer(GPUIndexBuffer& indexBuffer, uint64_t offset);
 
     /**
+ * @brief Sets the bind group for a specific slot in the GPU.
+ *
+ * This function is used to set the bind group for a specific slot in the GPU. The bind group contains a collection of resources
+ * (such as buffers, textures, samplers) that are bound to the shader stages for a specific draw call. The slot parameter indicates
+ * the index of the slot in which the bind group should be set.
+ *
+ * @param bindingGroup The bind group object to be set.
+ * @param slot The index of the slot in which the bind group should be set.
+ *
+ * @note It is the caller's responsibility to ensure that the bind group being set is compatible with the shader stages and their
+ * corresponding bindings.
+ *
+ * @see GPUBindingGroup
+ */
+
+    void SetBindGroup(GPUBindingGroup& bindingGroup, uint32_t slot);
+
+    /**
  * @class Draw
  * @brief Represents a Draw call in a rendering pipeline.
  *
@@ -103,8 +121,6 @@ public:
  */
 
     void DrawIndexed(uint64_t IndexCount, uint64_t InstanceCount, uint64_t FirstIndex, uint64_t FirstInstance);
-
-    void SetBindGroup(GPUBindingGroup& bindingGroup, uint32_t slot);
 
     //TODO void DrawIndirect();
     //TODO void DrawIndexedIndirect();

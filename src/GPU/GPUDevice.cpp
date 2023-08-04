@@ -51,16 +51,23 @@ GPUDevice::GPUDevice(GPUAdapter& adapter) {
     };
 
     setDefault(requiredLimits.limits);
+    // vertex buffer
     requiredLimits.limits.maxVertexAttributes = 2;
     requiredLimits.limits.maxVertexBuffers = 1;
     requiredLimits.limits.maxBufferSize = 6 * 5 * sizeof(float);
     requiredLimits.limits.maxVertexBufferArrayStride = 5 * sizeof(float);
+    // uniform buffers
     requiredLimits.limits.minStorageBufferOffsetAlignment = adapter.limits.limits.minStorageBufferOffsetAlignment;
     requiredLimits.limits.minUniformBufferOffsetAlignment = adapter.limits.limits.minUniformBufferOffsetAlignment;
-    requiredLimits.limits.maxInterStageShaderComponents = 3;
+    requiredLimits.limits.maxInterStageShaderComponents = 6;
     requiredLimits.limits.maxBindGroups = 1;
     requiredLimits.limits.maxUniformBuffersPerShaderStage = 1;
-    requiredLimits.limits.maxUniformBufferBindingSize = 16 * 4;
+    requiredLimits.limits.maxUniformBufferBindingSize = 16 * 4 * sizeof(float);
+    // textures
+    requiredLimits.limits.maxSampledTexturesPerShaderStage = 1;
+    requiredLimits.limits.maxTextureDimension1D = 480;
+    requiredLimits.limits.maxTextureDimension2D = 640;
+    requiredLimits.limits.maxTextureArrayLayers = 1;
     descriptor.requiredLimits = &requiredLimits;
 
     struct UserData {

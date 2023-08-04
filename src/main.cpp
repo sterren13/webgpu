@@ -12,6 +12,7 @@
 #include "GPU/GPUIndexBuffer.h"
 #include "GPU/GPUUniformBuffer.h"
 #include "GPU/GPUBindingGroup.h"
+#include "GPU/GPUTexture.h"
 #include <iostream>
 
 int main(int, char**){
@@ -90,8 +91,16 @@ int main(int, char**){
     GPUIndexBuffer IndexBuffer(g_device, 6, IndexFormat::Uint16);
     IndexBuffer.Write(0, indexData.data(), sizeof(uint16_t)*6);
 
-    GPUUniformBuffer uniform(g_device, sizeof(float ));
-    GPUBindingGroup bindingGroup(g_device, 0, ShaderStage::Vertex, uniform);
+    GPUUniformBuffer uniform(g_device, sizeof(float));
+    GPUTexture texture(g_device);
+    GPUBindingGroup bindingGroup(g_device,
+                                 {
+                                            {1, ShaderStage::Fragment, texture}
+                                          },
+                                 {
+                                            {0, ShaderStage::Vertex, 0, sizeof(float ), uniform}
+                                          }
+                                 );
 
     std::cout << "Create pipeline \n";
     GPURenderPipeline g_Pipeline(g_device, g_shader, g_swapChain.swapChainFormat, vertexBuffer1, bindingGroup);
@@ -125,6 +134,8 @@ int main(int, char**){
 
     float currentTime = 1.0f;
     uniform.Write(0, &currentTime, sizeof(float));
+
+    std::cout << std::endl;
 
     while (!w.Update()){
 
