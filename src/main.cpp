@@ -35,6 +35,7 @@ int main(int, char**){
     std::cout << "Create shader \n";
     const char* shaderSource = R"(
     @group(0) @binding(0) var<uniform> uTime: f32;
+    @group(0) @binding(1) var gradientTexture: texture_2d<f32>;
 
     struct VertexInput {
         @location(0) position: vec2f,
@@ -59,7 +60,8 @@ int main(int, char**){
 
     @fragment
     fn fs_main(in: VertexOutput) -> @location(0) vec4f {
-        return vec4f(in.color, 1.0);
+        let color = textureLoad(gradientTexture, vec2<i32>(in.position.xy), 0).rgb;
+        return vec4f(color, 1.0);
     }
     )";
     GPUShader g_shader(g_device, shaderSource);
@@ -140,8 +142,8 @@ int main(int, char**){
     while (!w.Update()){
 
         // update uniform buffer
-        float t = static_cast<float>(glfwGetTime());
-        uniform.Write(0, &t, sizeof(float ));
+        //float t = static_cast<float>(glfwGetTime());
+        //uniform.Write(0, &t, sizeof(float ));
 
         // Get the texture where to draw the next frame
         WGPUTextureView nextTexture = g_swapChain.CurrentTextureView();
